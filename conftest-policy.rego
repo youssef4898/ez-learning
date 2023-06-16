@@ -17,8 +17,7 @@ deny {
 # Rule to check for COPY or ADD statements
 deny {
   input.kind == "Dockerfile"
-  input.contents[i].instruction == "COPY" or
-  input.contents[i].instruction == "ADD"
+  input.contents[i].instruction == "COPY" || input.contents[i].instruction == "ADD"
   not dockerfile_scanner.fileExists(input.contents[i].source)
 }
 
