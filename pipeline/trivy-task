@@ -1,0 +1,75 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  annotations:
+    openshift.io/installed-from: tektonhub
+    tekton.dev/categories: Security
+    tekton.dev/displayName: trivy scanner
+    tekton.dev/pipelines.minVersion: 0.12.1
+    tekton.dev/platforms: linux/amd64
+    tekton.dev/tags: 'CLI, trivy'
+  resourceVersion: '3701323'
+  name: trivy-scanner
+  uid: 26cc0cea-f1bb-44a0-bcad-8f24c3a16ada
+  creationTimestamp: '2023-07-02T20:53:05Z'
+  generation: 2
+  managedFields:
+    - apiVersion: tekton.dev/v1beta1
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:metadata':
+          'f:annotations':
+            .: {}
+            'f:openshift.io/installed-from': {}
+            'f:tekton.dev/categories': {}
+            'f:tekton.dev/displayName': {}
+            'f:tekton.dev/pipelines.minVersion': {}
+            'f:tekton.dev/platforms': {}
+            'f:tekton.dev/tags': {}
+          'f:labels':
+            .: {}
+            'f:app.kubernetes.io/version': {}
+        'f:spec':
+          .: {}
+          'f:description': {}
+          'f:params': {}
+          'f:steps': {}
+          'f:workspaces': {}
+      manager: Mozilla
+      operation: Update
+      time: '2023-07-02T21:02:43Z'
+  namespace: youssef-project
+  labels:
+    app.kubernetes.io/version: '0.2'
+spec:
+  description: >-
+    Trivy is a simple and comprehensive scanner for vulnerabilities in container
+    images,file systems ,and Git repositories, as well as for configuration
+    issues.
+
+    This task can be used to scan for vulnenrabilities on the source code in
+    stand alone mode.
+  params:
+    - default: >-
+        docker.io/aquasec/trivy@sha256:dea76d4b50c75125cada676a87ac23de2b7ba4374752c6f908253c3b839201d9
+      description: Trivy scanner image to be used
+      name: TRIVY_IMAGE
+      type: string
+    - description: Image or Path to be scanned by trivy.
+      name: IMAGE_PATH
+      type: string
+    - default: 'false'
+      description: a flag enabling Air-Gapped mode
+      name: AIR_GAPPED_ENABLED
+      type: string
+  steps:
+    - args:
+        - $(params.IMAGE_PATH)
+      command:
+        - trivy
+      image: $(params.TRIVY_IMAGE)
+      name: trivy-scan
+      resources: {}
+      workingDir: $(workspaces.manifest-dir.path)
+  workspaces:
+    - name: manifest-dir
