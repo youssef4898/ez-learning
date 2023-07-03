@@ -1,0 +1,33 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  creationTimestamp: '2023-07-02T19:49:39Z'
+  generation: 2
+  managedFields:
+    - apiVersion: tekton.dev/v1beta1
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:spec':
+          .: {}
+          'f:params': {}
+          'f:steps': {}
+      manager: Mozilla
+      operation: Update
+      time: '2023-07-02T20:00:04Z'
+  name: owasp-zap-base-scan
+  namespace: youssef-project
+  resourceVersion: '3663218'
+  uid: 28c123d8-0c80-4cf9-90f3-40b3dc9da44b
+spec:
+  params:
+    - description: The target URL to be scanned by OWASP ZAP
+      name: targetURL
+      type: string
+  steps:
+    - command:
+        - /zap/zap-baseline.py
+        - '-t'
+        - $(inputs.params.targetURL)
+      image: owasp/zap2docker-stable
+      name: run-owasp-zap-scan
+      resources: {}
